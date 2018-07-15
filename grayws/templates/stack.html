@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Cloudformation Stack: {{ stack['name'] }}</h2>
+<h3>{{ stack['description'] }}</h3>
+<p>Status: {{ stack['status'] }}</p>
+<h4>Change Sets:</h4>
+<div class="content"></div>
+<script src="{{ url_for('static', filename='stack.js') }}"></script>
+{% endblock %}

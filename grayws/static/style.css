@@ -1,0 +1,20 @@
+body { 
+  background: #ededed;
+  font-family: sans-serif;
+  font-weight: 100;
+}
+
+h1, h2, h3, h4 {
+  font-weight: 100;
+}
+
+tr.change-set td {
+  font-size: .8em;
+  vertical-align: top;
+}
+
+tr.change-set td li {
+  margin-top: 0;
+  margin-bottom: 5px; 
+  line-height: 1.3em;
+}

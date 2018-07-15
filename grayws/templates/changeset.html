@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Change Set: {{ changeset }} (stack: {{ stack }})</h2>
+
+<h4>Changes:</h4>
+<div class="content"></div>
+<script src="{{ url_for('static', filename='changeset.js') }}"></script>
+{% endblock %}

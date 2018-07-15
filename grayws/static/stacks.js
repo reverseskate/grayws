@@ -1,0 +1,11 @@
+d3.select(".content")
+  .selectAll("div")
+  .data(json)
+  .enter()
+  .append("div")
+  .attr("class", "stack")
+  .append("a")
+  .attr("href", function(d) { return d['link']; })
+  .attr("class", "stack-link")
+  .text(function(d) { return d['name']; })
+;
