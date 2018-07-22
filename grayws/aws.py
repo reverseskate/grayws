@@ -33,7 +33,6 @@ def stack_list():
 
 def stack_info(stack):
     stack_details = cfn.describe_stacks(StackName=stack)
-    #print(stack_details['Stacks'])
     changesets = cfn.list_change_sets(StackName=stack)
     if len(changesets['Summaries']) > 0:
         stack_change_sets = list(map(lambda x: {
@@ -59,6 +58,10 @@ def stack_info(stack):
 def change_set_info(stack, changeset):
     change_set = cfn.describe_change_set(StackName=stack, ChangeSetName=changeset)
 
+    original_template = json.loads(to_json(cfn.get_template(StackName=stack)['TemplateBody']))
+    change_set_template = json.loads(to_json(cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']))
+    orig_resources = original_template['Resources']
+    new_resources = change_set_template['Resources']
 
     parameters = {item['ParameterKey']:item['ParameterValue'] for item in change_set['Parameters']}
     set_details = {
@@ -74,4 +77,5 @@ def change_set_info(stack, changeset):
         }, change_set['Changes']))
     }
 
-    return { 'raw': change_set, 'processed': set_details }
+    set_info = { 'raw': change_set, 'processed': set_details, 'orig': orig_resources, 'new': new_resources}
+    return set_info

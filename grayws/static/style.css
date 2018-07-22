@@ -8,13 +8,45 @@ h1, h2, h3, h4 {
   font-weight: 100;
 }
 
-tr.change-set td {
-  font-size: .8em;
-  vertical-align: top;
+th.headers {
+  font-weight: 100;
+  text-align: left;
+  padding: 0;
+  border: 0;
 }
 
-tr.change-set td li {
-  margin-top: 0;
+table.change-set {
+  border-bottom: 1px #bbb solid;
+}
+
+tr.change-set td, tr.compare td {
+  font-size: .8em;
+  vertical-align: top;
+  padding: 0;
+}
+
+td.details {
+  padding-top: 4;
+  border-top:1pt black dashed;
+}
+
+td.details li {
+  margin-top: 2px;
+  font-size: .8em;
   margin-bottom: 5px; 
   line-height: 1.3em;
+  list-style-type: none;
+}
+
+table.change-set tr.change-set td.action, td.action {
+  padding-right: 25px;
+}
+
+table.change-set tr.change-set td.replacement, td.replacement {
+  padding-left: 25px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
 }
