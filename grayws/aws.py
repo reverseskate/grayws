@@ -25,6 +25,20 @@ def parse_reasons(change, parameters):
     reasons = list(map(lambda x: compose_reason(x, parameters), change))
     return reasons
 
+def resource_diffs(orig, new):
+    diffs = {}
+    for resource in orig:
+        print(resource)
+        if resource in list(new.keys()):
+            print(orig[resource])
+            print(new[resource])
+            diff = jsondiff.diff(orig[resource], new[resource], syntax='explicit')
+            if diff:
+                print(diff)
+                diffs[resource] = diff
+    print(diffs)
+    return diffs
+
 ## AWS API Function
 def stack_list():
     stacks = cfn.list_stacks()
