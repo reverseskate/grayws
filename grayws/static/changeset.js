@@ -3,7 +3,6 @@ console.log(json)
 function prettyResource(resource) {
   if (resource != undefined) {
     additional_keys = Object.keys(resource).filter(function(d) { return d != 'Type' && d!= 'Properties'; })
-    console.log(additional_keys)
     res = {}
     res['Type'] = resource.Type
     res['Properties'] = resource.Properties
