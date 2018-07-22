@@ -1,2 +1,5 @@
 boto3
+cfn_flip
 flask
+jsondiff
+pyyaml

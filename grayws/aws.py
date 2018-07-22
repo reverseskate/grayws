@@ -1,24 +1,28 @@
 import boto3
+from cfn_flip import flip, to_yaml, to_json
+import json
+import jsondiff
+import re
+import yaml
 
 cfn = boto3.client('cloudformation')
 
 ## Data Manipulation Functions
-def compose_reason(detail):
+def compose_reason(detail, parameters):
     #print(detail)
     if detail['ChangeSource'] == 'DirectModification':
-        return "Direct modification of resource attribute {0} in {1}".format(detail['Target']['Name'], detail['Target']['Attribute'])
+        return "Resource {1} {0} changed through Direct Modification".format(detail['Target']['Name'], detail['Target']['Attribute'])
     elif detail['ChangeSource'] == 'ResourceAttribute':
-        return "Resource attribute {0} in {1} changed via resource {2}".format(detail['Target']['Name'], detail['Target']['Attribute'], detail['CausingEntity'])
+        return "Resource {1} {0} changed by Resource attribute {2}".format(detail['Target']['Name'], re.sub("(ies)$", "y", detail['Target']['Attribute']), detail['CausingEntity'])
     elif detail['ChangeSource'] == 'ResourceReference':
-        return "Resource attribute {0} in {1} changed via resource {2}".format(detail['Target']['Name'], detail['Target']['Attribute'], detail['CausingEntity'])
+        return "Resource {1} {0} changed by Resource {2}".format(detail['Target']['Name'], re.sub("(ies)$", "y", detail['Target']['Attribute']), detail['CausingEntity'])
     elif detail['ChangeSource'] == 'ParameterReference':
-        return "Resource attribute {0} in {1} changed via parameter {2}".format(detail['Target']['Name'], detail['Target']['Attribute'], detail['CausingEntity'])
+        return "Resource {1} {0} changed by Parameter {2}: {03}".format(detail['Target']['Name'], re.sub("(ies)$", "y", detail['Target']['Attribute']), detail['CausingEntity'], parameters[detail['CausingEntity']])
     else:
         return 'unknown'
 
-def parse_reasons(change):
-    reasons = list(map(lambda x: compose_reason(x), change))
-    print(reasons)
+def parse_reasons(change, parameters):
+    reasons = list(map(lambda x: compose_reason(x, parameters), change))
     return reasons
 
 ## AWS API Function
@@ -54,9 +58,11 @@ def stack_info(stack):
 
 def change_set_info(stack, changeset):
     change_set = cfn.describe_change_set(StackName=stack, ChangeSetName=changeset)
-    #print(change_set['Changes'])
+
+
+    parameters = {item['ParameterKey']:item['ParameterValue'] for item in change_set['Parameters']}
     set_details = {
-        'parameters': change_set['Parameters'],
+        'parameters': parameters,
         'changes': list(map(lambda x: {
             'Action': x['ResourceChange']['Action'],
             'LogicalResourceId': x['ResourceChange'].get('LogicalResourceId', None),
@@ -64,7 +70,7 @@ def change_set_info(stack, changeset):
             'Replacement': x['ResourceChange'].get('Replacement', None),
             'ResourceType': x['ResourceChange']['ResourceType'],
             'Scope': x['ResourceChange']['Scope'],
-            'Details': parse_reasons(x['ResourceChange']['Details'])
+            'Details': parse_reasons(x['ResourceChange']['Details'], parameters)
         }, change_set['Changes']))
     }
 
