@@ -25,3 +25,19 @@ def stack(stack_name):
 def changeset(stack_name, changeset):
     set_details = aws.change_set_info(stack_name, changeset)
     return render_template('changeset.html', stack = stack_name, changeset = changeset, data = set_details)
+
+@app.route("/stack/<stack_name>/set/<changeset>/apply")
+def apply(stack_name, changeset):
+    aws.apply_change_set(stack_name, changeset)
+    return render_template('confirm_apply.html', stack = stack_name, changeset = changeset, data = {})
+
+@app.route("/stack/<stack_name>/set/<changeset>/delete")
+def delete(stack_name, changeset):
+    aws.delete_change_set(stack_name, changeset)
+    return render_template('confirm_delete.html', stack = stack_name, changeset = changeset, data = {})
+
+@app.route("/stack/<stack_name>/events")
+def events(stack_name):
+    scope = None
+    events = aws.stack_events(stack_name, None)
+    return render_template('events.html', stack = stack_name, scope = scope, data = events)

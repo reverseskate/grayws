@@ -25,6 +25,15 @@ def parse_reasons(change, parameters):
     reasons = list(map(lambda x: compose_reason(x, parameters), change))
     return reasons
 
+def parse_event(event):
+    event_string = "{0}\t\t{1}\t\t{2}\t\t{3}".format(
+        event['Timestamp'].strftime("%Y-%M-%d %H:%M:%S UTC"),
+        "{0}\t".format(event['ResourceStatus']) if len(event['ResourceStatus']) < 17 else event['ResourceStatus'],
+        "{0}\t".format(event['ResourceType']) if len(event['ResourceType']) < 24 else event['ResourceType'],
+        event['LogicalResourceId']
+        )
+    return event_string
+
 def resource_diffs(orig, new):
     diffs = {}
     for resource in orig:
@@ -93,3 +102,20 @@ def change_set_info(stack, changeset):
 
     set_info = { 'raw': change_set, 'processed': set_details, 'orig': orig_resources, 'new': new_resources}
     return set_info
+
+def stack_events(stack, scope):
+    raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
+    if scope:
+        events = list(map(lambda x: parse_event(x), raw_events))
+        print("Filtering events")
+    else:
+        events = list(map(lambda x: parse_event(x), raw_events))
+    return events
+
+def apply_change_set(stack, changeset):
+    cfn.execute_change_set(StackName=stack, ChangeSetName=changeset)
+    return True
+
+def delete_change_set(stack, changeset):
+    cfn.delete_change_set(StackName=stack, ChangeSetName=changeset)
+    return True
