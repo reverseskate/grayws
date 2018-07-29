@@ -61,10 +61,9 @@ rows.select("table").select("tr.compare").append("td").attr("class", "new").attr
   return templateSnippet(d.LogicalResourceId, json['new']);
 });
 
-changes = rows.select("table").select("tr.reasons").selectAll("td.details").select("td.details")
+changes = rows.select("table").select("tr.reasons").select("td.details").selectAll("td.details")
 
 changes.data(function(d) { return d.Details; }) 
   .enter()
-  .select("td.details")
   .append("li")
   .text(function(d) { return d; });
