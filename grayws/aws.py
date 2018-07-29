@@ -80,9 +80,19 @@ def stack_info(stack):
 
 def change_set_info(stack, changeset):
     change_set = cfn.describe_change_set(StackName=stack, ChangeSetName=changeset)
+    original_template_body = cfn.get_template(StackName=stack)['TemplateBody']
+    change_set_template_body = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
+    if isinstance(original_template_body, str):
+        original_template = json.loads(to_json(original_template_body))
+        print("Original Template is YAML")
+    else:
+        original_template = dict(original_template_body)
+    if isinstance(change_set_template_body, str):
+        change_set_template = json.loads(to_json(change_set_template_body))
+        print("New Template is YAML")
+    else:
+        change_set_template = dict(change_set_template_body)
 
-    original_template = json.loads(to_json(cfn.get_template(StackName=stack)['TemplateBody']))
-    change_set_template = json.loads(to_json(cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']))
     orig_resources = original_template['Resources']
     new_resources = change_set_template['Resources']
 
