@@ -24,8 +24,8 @@ table = d3.select(".content").append("table").attr("class", "changes");
 headers = table.append("th").attr("class", "headers")
 
 headers.append("td").attr("width", 50).attr("class", "header").attr("class", "action").text("Action");
-headers.append("td").attr("width", 450).attr("class", "header").attr("class", "type").text("Type");
-headers.append("td").attr("width", 450).attr("class", "header").attr("class", "resource").text("Resource");
+headers.append("td").attr("width", 475).attr("class", "header").attr("class", "type").text("Type");
+headers.append("td").attr("width", 475).attr("class", "header").attr("class", "resource").text("Resource");
 //headers.append("td").attr("width", 450).text("Changes");
 headers.append("td").attr("width", 100).attr("class", "replacement").text("Replacement");
 
@@ -44,7 +44,7 @@ rows.append("td").attr("colspan", 4).attr("class", "container").append("table").
 rows.select("table").append("tr").attr("class", "change-set");
 rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.Action; }).attr("width", 52).attr("class", "action");
 rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.ResourceType; } ).attr("width", 452).attr("class", "type");
-rows.select("table").select("tr.change-set").append("td").attr("class", "logical-id").text(function(d) { return d.LogicalResourceId; } ).attr("width", 452).attr("class", "resource");
+rows.select("table").select("tr.change-set").append("td").attr("class", "logical-id").text(function(d) { return d.LogicalResourceId; } ).attr("width", 477).attr("class", "resource");
 rows.select("table").select("tr.change-set").append("td").attr("width", 100).attr("class", "replacement").text(function(d) { return d.Replacement; });
 
 // Append the change set reasons row
@@ -54,10 +54,10 @@ rows.select("table").select("tr.reasons").append("td").attr("class", "details").
 // Append the change set compare row
 rows.select("table").append("tr").attr("class", "compare");
 rows.select("table").select("tr.compare").append("td").text("Compare");
-rows.select("table").select("tr.compare").append("td").attr("class", "old").attr("width", 450).append("pre").text(function(d) { 
+rows.select("table").select("tr.compare").append("td").attr("class", "old").attr("width", 475).append("pre").text(function(d) { 
   return templateSnippet(d.LogicalResourceId, json['orig']);
 });
-rows.select("table").select("tr.compare").append("td").attr("class", "new").attr("width", 450).append("pre").text(function(d) { 
+rows.select("table").select("tr.compare").append("td").attr("class", "new").attr("width", 475).append("pre").text(function(d) { 
   return templateSnippet(d.LogicalResourceId, json['new']);
 });
 

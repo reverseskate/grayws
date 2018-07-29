@@ -46,7 +46,8 @@ table.change-set tr.change-set td.replacement, td.replacement {
   padding-left: 25px;
 }
 
-pre {
+tr.compare td pre {
   white-space: pre-wrap;
   word-wrap: break-word;
+  width: 475px;
 }
