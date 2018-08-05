@@ -51,3 +51,8 @@ tr.compare td pre {
   word-wrap: break-word;
   width: 475px;
 }
+
+.content pre {
+  background-color: #222;
+  color: white;
+}

@@ -26,10 +26,25 @@ def parse_reasons(change, parameters):
     return reasons
 
 def parse_event(event):
-    event_string = "{0}\t\t{1}\t\t{2}\t\t{3}".format(
+    status_length = len(event['ResourceStatus'])
+    tabs = "\t\t\t\t\t"
+
+    if status_length > 13:
+        tabs = "\t\t\t\t"
+
+    if status_length > 23:
+        tabs = "\t\t\t"
+
+    if status_length > 27:
+        tabs = "\t\t"
+
+    if len(event['ResourceStatus']) == 44:
+        tabs = "\t"
+
+    event_string = "[{0}] {1} {2} \t\"{3}\"".format(
         event['Timestamp'].strftime("%Y-%M-%d %H:%M:%S UTC"),
-        "{0}\t".format(event['ResourceStatus']) if len(event['ResourceStatus']) < 17 else event['ResourceStatus'],
-        "{0}\t".format(event['ResourceType']) if len(event['ResourceType']) < 24 else event['ResourceType'],
+        "{0}{1}".format(event['ResourceStatus'], tabs),# if len(event['ResourceStatus']) < 17 elif event['ResourceStatus'],
+        event['ResourceType'],
         event['LogicalResourceId']
         )
     return event_string
