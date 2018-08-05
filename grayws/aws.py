@@ -43,7 +43,7 @@ def parse_event(event):
 
     event_string = "[{0}] {1} {2} \t\"{3}\"".format(
         event['Timestamp'].strftime("%Y-%M-%d %H:%M:%S UTC"),
-        "{0}{1}".format(event['ResourceStatus'], tabs),# if len(event['ResourceStatus']) < 17 elif event['ResourceStatus'],
+        "{0}{1}".format(event['ResourceStatus'], tabs),
         event['ResourceType'],
         event['LogicalResourceId']
         )
