@@ -19,7 +19,11 @@ table.change-set {
   border-bottom: 1px #bbb solid;
 }
 
-tr.change-set td, tr.compare td {
+tr.compare {
+  display: none;
+}
+
+tr.change-set td, tr.compare td, tr.diff td {
   font-size: .8em;
   vertical-align: top;
   padding: 0;

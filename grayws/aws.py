@@ -1,11 +1,21 @@
 import boto3
 from cfn_flip import flip, to_yaml, to_json
 import json
-import jsondiff
+from deepmerge import Merger, always_merger
+from dictdiffer import diff, patch
 import re
 import yaml
 
 cfn = boto3.client('cloudformation')
+
+diff_merger = Merger(
+    [
+        (list, ["append"]),
+        (dict, ["merge"])
+    ],
+    ["override"],
+    ["override"]
+)
 
 ## Data Manipulation Functions
 def compose_reason(detail, parameters):
@@ -49,18 +59,50 @@ def parse_event(event):
         )
     return event_string
 
+def construct_diff(args):
+    print(args)
+    if isinstance(args[1], str):
+        node_keys = args[1].split(".")
+    else:
+        node_keys = args[1]
+    leaf_index = len(node_keys) - 1
+
+    obj = current = {}
+    for index, key in enumerate(node_keys):
+        if index == leaf_index:
+            if args[0] == "change":
+                #current[key] = "{0} -> {1}".format(args[2][0], args[2][1])
+                current["- {0}".format(key)] = args[2][0]
+                current["+ {0}".format(key)] = args[2][1]
+            else:
+                if args[0] == "add":
+                    operator = "+"
+                elif args[0] == "remove":
+                    operator = "-"
+                if isinstance(args[2], str):
+                    current["{0} {1}".format(operator, key)] = args[2]
+                elif isinstance(args[2], list):
+                    if isinstance(args[2][0], tuple):
+                        if isinstance(args[2][0][0], int):
+                            current["{0} {1}".format(operator,key)] = [ args[2][0][1] ]
+                        else:
+                            current[key] = { "{0} {1}".format(operator,args[2][0][0]): args[2][0][1]}
+                    else:
+                        current[key] = list(map(lambda x: "{0} {1}".format(operator, x), args[2][0]))
+        else:
+            current[key] = {}
+            current = current[key]
+    return obj
+
 def resource_diffs(orig, new):
     diffs = {}
     for resource in orig:
-        print(resource)
         if resource in list(new.keys()):
-            print(orig[resource])
-            print(new[resource])
-            diff = jsondiff.diff(orig[resource], new[resource], syntax='explicit')
-            if diff:
-                print(diff)
-                diffs[resource] = diff
-    print(diffs)
+            resource_diff = diff(orig[resource], new[resource])
+            if resource_diff:
+                diffs[resource] = {}
+                for index,dff in enumerate(list(resource_diff)):
+                    diffs[resource] = diff_merger.merge(diffs[resource], construct_diff(dff))
     return diffs
 
 ## AWS API Function
@@ -111,6 +153,8 @@ def change_set_info(stack, changeset):
     orig_resources = original_template['Resources']
     new_resources = change_set_template['Resources']
 
+    diffs = resource_diffs(orig_resources, new_resources)
+
     parameters = {item['ParameterKey']:item['ParameterValue'] for item in change_set['Parameters']}
     set_details = {
         'parameters': parameters,
@@ -125,7 +169,7 @@ def change_set_info(stack, changeset):
         }, change_set['Changes']))
     }
 
-    set_info = { 'raw': change_set, 'processed': set_details, 'orig': orig_resources, 'new': new_resources}
+    set_info = { 'raw': change_set, 'processed': set_details, 'orig': orig_resources, 'new': new_resources, 'diffs': diffs }
     return set_info
 
 def stack_events(stack, scope):

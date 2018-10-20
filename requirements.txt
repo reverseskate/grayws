@@ -1,5 +1,7 @@
 boto3
 cfn_flip
+deepmerge
+dictdiffer
 flask
 jsondiff
 pyyaml
