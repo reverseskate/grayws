@@ -24,8 +24,8 @@ table = d3.select(".content").append("table").attr("class", "changes");
 headers = table.append("th").attr("class", "headers")
 
 headers.append("td").attr("width", 50).attr("class", "header").attr("class", "action").text("Action");
-headers.append("td").attr("width", 475).attr("class", "header").attr("class", "type").text("Type");
-headers.append("td").attr("width", 475).attr("class", "header").attr("class", "resource").text("Resource");
+headers.append("td").attr("width", 460).attr("class", "header").attr("class", "type").text("Type");
+headers.append("td").attr("width", 483).attr("class", "header").attr("class", "resource").text("Resource");
 //headers.append("td").attr("width", 450).text("Changes");
 headers.append("td").attr("width", 100).attr("class", "replacement").text("Replacement");
 
