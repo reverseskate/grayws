@@ -19,7 +19,6 @@ diff_merger = Merger(
 
 ## Data Manipulation Functions
 def compose_reason(detail, parameters):
-    #print(detail)
     if detail['ChangeSource'] == 'DirectModification':
         return "Resource {1} {0} changed through Direct Modification".format(detail['Target']['Name'], detail['Target']['Attribute'])
     elif detail['ChangeSource'] == 'ResourceAttribute':
