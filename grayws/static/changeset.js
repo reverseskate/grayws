@@ -15,7 +15,11 @@ function prettyResource(resource) {
 function templateSnippet(resource, resource_list) {
   obj = {}
   obj[resource] = prettyResource(resource_list[resource])
-  snippet = JSON.stringify(obj, null, 2).replace(/(^.*{\s*)|(\s*}.*$)/g,'').replace(/^\s{2}/gm, '')
+  snippet = JSON.stringify(obj, null, 2)
+    .replace(/(^.*{\s*)|(\s*}.*$)/g,'')
+    .replace(/^\s{2}/gm, '')
+    .replace(/(")(\+|-)/gm,"$2$1") // Move diff indicators outside quotes
+    .replace(/(\+"|-")([^(,$)]*)(,$)/gm, "$1$2") // Strip any commas from diff
   return snippet;
 }
 
