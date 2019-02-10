@@ -5,6 +5,8 @@
 <h3>{{ stack['description'] }}</h3>
 <p>Status: {{ stack['status'] }}</p>
 <h4>Change Sets:</h4>
-<div class="content"></div>
+<div class="change_sets"></div>
+<h4>Resource Drift:</h4>
+<div class="drift"></div>
 <script src="{{ url_for('static', filename='stack.js') }}"></script>
 {% endblock %}

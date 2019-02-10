@@ -113,6 +113,8 @@ def stack_list():
 def stack_info(stack):
     stack_details = cfn.describe_stacks(StackName=stack)
     changesets = cfn.list_change_sets(StackName=stack)
+    drift = cfn.describe_stack_resource_drifts(StackName=stack, StackResourceDriftStatusFilters= ['MODIFIED','DELETED'])
+
     if len(changesets['Summaries']) > 0:
         stack_change_sets = list(map(lambda x: {
             'name': x['ChangeSetName'],
@@ -126,6 +128,7 @@ def stack_info(stack):
     details = list(map(lambda x: {
         'name': stack,
         'change_sets': stack_change_sets,
+        'drifts': drift['StackResourceDrifts'],
         #'current_change_set': x['ChangeSetId'],
         #'description': x['Description'],
         'created': x['CreationTime'],
@@ -133,6 +136,13 @@ def stack_info(stack):
         'status': x['StackStatus']
         }, stack_details['Stacks']))
     return details[0]
+
+def get_template(stack, change_set=None):
+    if change_set:
+        template = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
+    else:
+        template = cfn.get_template(StackName=stack)['TemplateBody']
+    return template
 
 def change_set_info(stack, changeset):
     change_set = cfn.describe_change_set(StackName=stack, ChangeSetName=changeset)

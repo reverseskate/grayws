@@ -15,7 +15,7 @@ th.headers {
   border: 0;
 }
 
-table.change-set {
+table.change-set, table.drift {
   border-bottom: 1px #bbb solid;
 }
 
@@ -23,10 +23,18 @@ tr.compare {
   display: none;
 }
 
-tr.change-set td, tr.compare td, tr.diff td {
+tr.change-set td, tr.compare td, tr.diff td, tr.drift td {
   font-size: .8em;
   vertical-align: top;
   padding: 0;
+}
+
+tr.diff td.diff-label {
+  padding-top: 1em;
+}
+
+tr.drift td {
+  line-height: 1.5em;
 }
 
 td.details {
@@ -34,12 +42,43 @@ td.details {
   border-top:1pt black dashed;
 }
 
-td.details li {
+td.details li, td.difference li {
   margin-top: 2px;
   font-size: .8em;
   margin-bottom: 5px; 
   line-height: 1.3em;
   list-style-type: none;
+}
+
+span.code {
+  font-family: monospace;
+  font-size: 1.2em;
+  padding-left: 10px;
+  
+}
+
+span.resource {
+  font-family: monospace;
+  font-size: 1.3em;
+}
+
+li.expected, li.actual {
+  padding: 5px;
+  border-style: solid;
+  border-width: thin;
+  border-radius: 3px;
+}
+
+li.expected {
+  border-color: blue;
+}
+
+li.actual {
+  border-color: red;
+}
+
+li.expected pre, li.actual pre {
+  margin-bottom: 0;
 }
 
 table.change-set tr.change-set td.action, td.action {
@@ -63,11 +102,19 @@ tr.differences td pre {
   width: 900px;
 }
 
-.content pre {
+.content pre, .expected pre, .actual pre {
   padding: 5px;
  	border-radius: 3px;
-  background-color: #333;
+ 	background-color: #333;
   color: white;
+}
+
+.expected {
+  color: blue;
+}
+
+.actual {
+  color: red;
 }
 
 g.links {

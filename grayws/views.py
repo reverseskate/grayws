@@ -21,6 +21,11 @@ def stack(stack_name):
     stack_info = aws.stack_info(stack_name)
     return render_template('stack.html', stack = stack_info, data = stack_info)
 
+@app.route("/stack/<stack_name>/template/")
+def template(stack_name):
+    template = aws.get_template(stack_name)
+    return render_template('template.html', stack = stack_name, data = template)
+
 @app.route("/stack/<stack_name>/set/<changeset>/")
 def changeset(stack_name, changeset):
     set_details = aws.change_set_info(stack_name, changeset)

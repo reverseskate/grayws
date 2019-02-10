@@ -65,8 +65,8 @@ rows.select("table").select("tr.compare").append("td").attr("class", "new").attr
   return templateSnippet(d.LogicalResourceId, json['new']);
 });
 // Append the change set diffs row
-rows.select("table").append("tr").attr("class", "diff");
-rows.select("table").select("tr.diff").append("td").text("Diff");
+rows.select("table").filter(function(d) { return d.Action == 'Modify'; }).append("tr").attr("class", "diff");
+rows.select("table").select("tr.diff").append("td").attr("class", "diff-label").text("Diff");
 rows.select("table").select("tr.diff").append("td").attr("class", "diff").attr("colspan", 2).attr("width", 950).append("pre").text(function(d) { 
   return templateSnippet(d.LogicalResourceId, json['diffs']);
 });
