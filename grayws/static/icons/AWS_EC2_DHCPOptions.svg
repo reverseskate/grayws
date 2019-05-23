@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<svg width="50" height="50" xmlns="http://www.w3.org/2000/svg">
+ <!-- Created with Method Draw - http://github.com/duopixel/Method-Draw/ -->
+ <g>
+  <title>background</title>
+  <rect fill="#693cc5" id="canvas_background" height="52" width="52" y="-1" x="-1"/>
+  <g display="none" overflow="visible" y="0" x="0" height="100%" width="100%" id="canvasGrid">
+   <rect fill="url(#gridpattern)" stroke-width="0" y="0" x="0" height="100%" width="100%"/>
+  </g>
+ </g>
+ <g>
+  <title>Layer 1</title>
+  <text style="cursor: move;" xml:space="preserve" text-anchor="start" font-family="Oswald, sans-serif" font-size="24" id="svg_1" y="190" x="95" stroke-width="0" stroke="#fff" fill="#fff">DHCP</text>
+  <text xml:space="preserve" text-anchor="start" font-family="'Simonetta', serif" font-size="24" id="svg_2" y="124" x="234" stroke-width="0" stroke="#fff" fill="#fff">DHCP</text>
+  <rect id="svg_4" height="50" width="14250" y="178" x="212" stroke-width="1.5" stroke="#fff" fill="#fff"/>
+  <rect stroke="#fff" id="svg_5" height="9" width="96" y="226" x="357" stroke-width="1.5" fill="#fff"/>
+  <text font-weight="bold" xml:space="preserve" text-anchor="start" font-family="Helvetica, Arial, sans-serif" font-size="12" id="svg_6" y="29.234375" x="7.992188" stroke-opacity="null" stroke-width="0" stroke="#fff" fill="#ffffff">DHCP</text>
+  <line stroke="#fff" stroke-linecap="null" stroke-linejoin="null" id="svg_7" y2="14" x2="48" y1="14" x1="2" stroke-opacity="null" stroke-width="2" fill="#fff"/>
+  <line stroke-linecap="null" stroke-linejoin="null" id="svg_8" y2="36" x2="48" y1="36" x1="2" stroke-opacity="null" stroke-width="2" stroke="#fff" fill="#fff"/>
+ </g>
+</svg>
