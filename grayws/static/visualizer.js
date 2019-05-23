@@ -13,13 +13,55 @@ var settings = {
   }  
 }
 
+var resource_states = {
+  "CREATE_IN_PROGRESS": {
+    "color": "yellow"
+  }, 
+  CREATE_FAILED: {
+    color: "red"
+  },
+  CREATE_COMPLETE: {
+    "color": "green"
+  },
+  DELETE_IN_PROGRESS: {
+    color: "yellow"
+  },
+  DELETE_FAILED: {
+    color: "red"
+  },
+  DELETE_COMPLETE: {
+    color: "green"
+  },
+  DELETE_SKIPPED: {
+    color: "orange"
+  },
+  UPDATE_IN_PROGRESS: {
+    color: "yellow"
+  },
+  UPDATE_FAILED: {
+    color: "orange"
+  },
+  UPDATE_COMPLETE: {
+    color: "green"
+  }
+}
+
 function resource_state(stack) {
-  d3.json("/stack/" + stack + "/json/events/").then(function(events) {
+  console.log("refresh")
+  d3.json("/stack/" + stack + "/json/resources/").then(function(resources) {
+    resources.forEach(function(d) {
+      d3.select("circle." + d.LogicalResourceId).attr("class", d3.select("circle." + d.LogicalResourceId).attr("class").replace("incomplete", d.ResourceStatus))
+        .attr("stroke-width", node_size * settings["Resource"]["scale"] * .1)
+//        .attr("stroke", function(d) { return resource_states[d.ResourceStatus]["color"]; })
+    })
+
+/*
     first_event = d3.max(events.filter(function(d) { return d.ResourceStatusReason == "User Initiated" && d.ResourceType == "AWS::CloudFormation::Stack" }), function(d) { return d.Timestamp; })
     current_events = events.filter(function(d) { return d.Timestamp >= first_event && d.ResourceType != "AWS::CloudFormation::Stack"; })
     current_events.forEach(function(d) {    
       d3.select("circle." + d.LogicalResourceId).attr("class", d3.select("circle." + d.LogicalResourceId).attr("class").replace("incomplete", "complete")).attr("stroke-width", node_size * settings["Resource"]["scale"] * .1)
     })
+*/
   })
 }
 
@@ -462,24 +504,33 @@ var label = node.append("text")
       .attr("cy", function(d) { return d.y = (d.source.y + d.target.y)/2; })
 */
   }
+}
+
+resource_state(stack)
+//swell()
+
+simulate()
+
 
 function swell() {
-  var incomplete = d3.selectAll("circle.Resource.incomplete").attr("stroke", "yellow")
-  incomplete
+
+  // Animate In Progress
+  in_progress =  d3.selectAll(".CREATE_COMPLETE, .UPDATE_IN_PROGRESS, .DELETE_IN_PROGRESS") 
+
+  in_progress
     .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; }) 
     .transition()
     .duration(2000)   
     .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .3; }) 
     .transition()
     .duration(2000)
-    .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; })     
-    .on("end", swell);
+    .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; })
+    .transition()
+    .duration(2000);
+//    .on("end", swell());
   }
 
-//console.log(grayws_links.filter(function(d) { return d.target.id == 'Vpc'}))
-
-resource_state(stack)
-
-swell()
+//swell()
+//swell()
 
  

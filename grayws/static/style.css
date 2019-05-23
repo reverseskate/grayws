@@ -121,3 +121,27 @@ g.links {
   stroke-width: 5;
   color: blue;
 }
+
+text, title {
+  fill: black; 
+  font-family: sans-serif;
+  font-size: 10px;
+}
+
+.CREATE_COMPLETE, .DELETE_COMPLETE, .UPDATE_COMPLETE {
+  stroke: green
+}
+
+.CREATE_IN_PROGRESS, .DELETE_IN_PROGRESS, .UPDATE_IN_PROGRESS {
+  stroke: yellow
+}
+
+.DELETE_SKIPPED {
+  stroke: orange
+}
+
+.CREATE_FAILED, .DELETE_FAILED, .UPDATE_FAILED {
+  stroke: red
+}
+
+
