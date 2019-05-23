@@ -486,15 +486,17 @@ var label = node.append("text")
     .attr('y', 3)
     .text(function(d) { return d.type + ": " + d.id; });
 
+function simulate() {
   simulation
       .nodes(grayws_nodes)
       .on("tick", ticked)
-      .tick(25);
+      .tick(25)
+      .on("end", swell)
 
   simulation.force("link")
       .links(grayws_links);
 
-  function ticked(e) {
+  function ticked() {
     link
       .attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
@@ -503,11 +505,11 @@ var label = node.append("text")
 
     backgrounds
       .attr("cx", function(d) { return d.x; })         
-      .attr("cy", function(d) { return d.y; })
+      .attr("cy", function(d) { return d.y; });
 
     node
       .attr("cx", function(d) { return d.x; }) 
-      .attr("cy", function(d) { return d.y; })
+      .attr("cy", function(d) { return d.y; });
 
 /*
     midpoint
@@ -518,10 +520,8 @@ var label = node.append("text")
 }
 
 resource_state(stack)
-//swell()
 
 simulate()
-
 
 function swell() {
 
