@@ -59,7 +59,6 @@ def parse_event(event):
     return event_string
 
 def construct_diff(args):
-    print(args)
     if isinstance(args[1], str):
         node_keys = args[1].split(".")
     else:
@@ -150,12 +149,10 @@ def change_set_info(stack, changeset):
     change_set_template_body = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
     if isinstance(original_template_body, str):
         original_template = json.loads(to_json(original_template_body))
-        print("Original Template is YAML")
     else:
         original_template = dict(original_template_body)
     if isinstance(change_set_template_body, str):
         change_set_template = json.loads(to_json(change_set_template_body))
-        print("New Template is YAML")
     else:
         change_set_template = dict(change_set_template_body)
 
