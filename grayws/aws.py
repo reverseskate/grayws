@@ -141,6 +141,10 @@ def get_template(stack, change_set=None):
         template = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
     else:
         template = cfn.get_template(StackName=stack)['TemplateBody']
+
+    if isinstance(template, str):
+      template = json.loads(to_json(template))
+
     return template
 
 def change_set_info(stack, changeset):
@@ -182,10 +186,17 @@ def stack_events(stack, scope):
     raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
     if scope:
         events = list(map(lambda x: parse_event(x), raw_events))
-        print("Filtering events")
     else:
         events = list(map(lambda x: parse_event(x), raw_events))
     return events
+
+def resources_json(stack):
+  resources = cfn.list_stack_resources(StackName=stack)['StackResourceSummaries']
+  return resources
+
+def events_json(stack):
+  raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
+  return raw_events
 
 def apply_change_set(stack, changeset):
     cfn.execute_change_set(StackName=stack, ChangeSetName=changeset)
