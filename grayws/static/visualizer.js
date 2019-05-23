@@ -398,7 +398,7 @@ var defs = viz.append("defs")
 var simulation = d3.forceSimulation()
   .force("link", d3.forceLink().id(function(d) { return d.id; }))
   .force("charge", d3.forceManyBody(-30).distanceMax(1))
-  .force("center", d3.forceCenter(500, node_size * 12))
+  .force("center", d3.forceCenter(500, node_size * 15))
   .force("collision", d3.forceCollide().radius(node_size * 2));
 
 var link = viz.append("g")
@@ -457,30 +457,6 @@ var icon = defs.selectAll("icon")
   .attr("x", 0)
   .attr("y", 0)
 
-/*
-var midpoint = viz.append("g")
-  .attr("class", "nodes")
-  .selectAll("circle")
-  .data(grayws_links)
-  .enter().append("circle")
-  .attr("r", 1)
-  .attr("fill", "yellow")
-*/
-
-/*
-  .attr("xlink:href", function(d) { 
-    if (d.type == "Resource") {
-      return check_icon("/static/icons/" + d.resource.replace(/::/g, "_") + ".svg")
-    } else {
-      return "/static/icons/404.png"
-    }
-  })
-  .attr("width", node_size * .9 * 2)
-  .attr("height", node_size * .9 * 2)
-  .attr("x", node_size * .9)
-  .attr("y", node_size * .9)
-  */
-
 var label = node.append("text")
     .attr('x', 4)
     .attr('y', 3)
@@ -488,9 +464,9 @@ var label = node.append("text")
 
 function simulate() {
   simulation
-      .nodes(grayws_nodes)
+      .nodes(grayws_nodes.concat(grayws_links))
       .on("tick", ticked)
-      .tick(25)
+      .tick(8)
       .on("end", swell)
 
   simulation.force("link")
@@ -510,12 +486,6 @@ function simulate() {
     node
       .attr("cx", function(d) { return d.x; }) 
       .attr("cy", function(d) { return d.y; });
-
-/*
-    midpoint
-      .attr("cx", function(d) { return d.x = (d.source.x + d.target.x)/2; })
-      .attr("cy", function(d) { return d.y = (d.source.y + d.target.y)/2; })
-*/
   }
 }
 
