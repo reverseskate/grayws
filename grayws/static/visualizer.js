@@ -407,7 +407,8 @@ var link = viz.append("g")
   .data(grayws_links)
   .enter().append("line")
   .attr("stroke-width", 2)
-  .attr("stroke", "purple");
+  .attr("stroke", "purple")
+  .attr("opacity", .5);
 
 var backgrounds = viz.append("g")
   .attr("class", "nodes")
@@ -419,9 +420,13 @@ var backgrounds = viz.append("g")
 
 var node = viz.append("g")
   .attr("class", "nodes")
-  .selectAll("circle.node")
+  .selectAll("g.nodes")
   .data(grayws_nodes)
-  .enter().append("circle")
+  .enter().append("g")
+  .on("mouseover", showtext)
+  .on("mouseout", hidetext)
+
+var circles = node.append("circle")
   .style("fill", function(d) { 
     return "url(#" + d.id + ")"
   })
@@ -458,9 +463,9 @@ var icon = defs.selectAll("icon")
   .attr("y", 0)
 
 var label = node.append("text")
-    .attr('x', 4)
-    .attr('y', 3)
-    .text(function(d) { return d.type + ": " + d.id; });
+    .attr('x', 0)
+    .attr('y', node_size * 1.35)
+    .text(function(d) { return d.type + ": " + d.id.replace("Output_", ""); });
 
 function simulate() {
   simulation
@@ -486,6 +491,10 @@ function simulate() {
     node
       .attr("cx", function(d) { return d.x; }) 
       .attr("cy", function(d) { return d.y; });
+
+    node.attr("transform", function(d) {
+        return "translate(" + d.x + "," + d.y + ")";
+      });
   }
 }
 
@@ -510,6 +519,14 @@ function swell() {
     .duration(2000);
 //    .on("end", swell());
   }
+
+function showtext() {
+  d3.select(this).attr("class", d3.select(this).attr("class") + " showtext")
+}
+
+function hidetext() {
+  d3.select(this).attr("class", d3.select(this).attr("class").replace(" showtext", ""))
+}
 
 //swell()
 //swell()

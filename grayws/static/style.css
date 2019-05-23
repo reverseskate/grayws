@@ -117,11 +117,6 @@ tr.differences td pre {
   color: red;
 }
 
-g.links {
-  stroke-width: 5;
-  color: blue;
-}
-
 text, title {
   fill: black; 
   font-family: sans-serif;
@@ -144,4 +139,13 @@ text, title {
   stroke: red
 }
 
+g text {
+  display: none;
+}
+
+g.showtext text {
+  display: inline;
+  fill: blue;
+  text-anchor: middle;
+}
 
