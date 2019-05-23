@@ -415,7 +415,7 @@ var backgrounds = viz.append("g")
   .data(grayws_nodes)
   .enter().append("circle")
   .attr("r", function(d) { return node_size * settings[d.type]["scale"] * .9; })
-  .attr("fill", "white")
+  .attr("fill", "white");
 
 var node = viz.append("g")
   .attr("class", "nodes")
@@ -423,11 +423,7 @@ var node = viz.append("g")
   .data(grayws_nodes)
   .enter().append("circle")
   .style("fill", function(d) { 
-    if (d.type == "Resource" || d.type == "Parameter") {
-      return "url(#" + d.id + ")"
-    } else {
-      return "white"
-    }
+    return "url(#" + d.id + ")"
   })
   .attr("class", function(d) { return d.type + " node incomplete " + d.id; })
   .attr("r", function(d) { return node_size * settings[d.type]["scale"] * .9; })
@@ -435,7 +431,7 @@ var node = viz.append("g")
   .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; })
 
 var icon = defs.selectAll("icon")
-  .data(grayws_nodes.filter(function(d) { return d.type == "Resource" || d.type == "Parameter"; }))
+  .data(grayws_nodes)
   .enter()
   .append("pattern")
   .attr("id", function(d) { return d.id })
@@ -445,17 +441,21 @@ var icon = defs.selectAll("icon")
   .append("image")
   .attr("xlink:href", function(d) { 
     if (d.type == "Resource") {
-      return check_icon("/static/icons/" + d.resource.replace(/::/g, "_") + ".svg")
-    } /*
-else if (d.type == "Parameter") {
+      if (d.resource.includes("Association") || d.resource.includes("Attachment")) {
+        return "/static/icons/Association.svg"
+      } else {
+        return check_icon("/static/icons/" + d.resource.replace(/::/g, "_") + ".svg")
+      }
+    } else if (d.type == "Parameter") {
       return "/static/icons/Parameter.svg"
-    } 
-*/
+    } else if (d.type == "Output") {
+      return "/static/icons/Output.svg"  
+    }
   })
   .attr("width", node_size * .9 * 2)
   .attr("height", node_size * .9 * 2)
-  .attr("x", 0)//node_size * .9)
-  .attr("y", 0)//node_size * .9)
+  .attr("x", 0)
+  .attr("y", 0)
 
 /*
 var midpoint = viz.append("g")
