@@ -217,13 +217,21 @@ resources.forEach(function(resource, i) {
         target: [ positions[dep.dependency].x, positions[dep.dependency].y + 15 ]
       })
 */
-      grayws_links.push({
-        source: resource.key,
-        target: dep.dependency,
-        value: 1
-      })
-    })  
-  }
+      if (Array.isArray(dep.dependency)) {
+        grayws_links.push({
+          source: resource.key,
+          target: dep.dependency[0],
+          value: 1
+        })
+      } else {
+        grayws_links.push({
+          source: resource.key,
+          target: dep.dependency,
+          value: 1
+        })
+      }  
+  })
+}
 });
 
 var outputs = d3.entries(json.Outputs)
@@ -234,7 +242,7 @@ output_links = outputs.map(function(d) {
       source: "Output_" + d.key,
       target: d.value.Value.Ref
     };
-  } else if (d3.keys(d.value.Value).includes('Fn::GetAtt')) {
+  } else if (d3.keys(d.value.Value).includes('GetAtt')) {
     return { 
       source: "Output_" + d.key,
       target: d.value.Value['Fn::GetAtt'][0]
@@ -243,6 +251,9 @@ output_links = outputs.map(function(d) {
 })
 
 grayws_links = grayws_links.concat(output_links)
+
+grayws_links = grayws_links.filter(function(d) { return d != undefined && !d.target.includes("AWS::") })
+
 
 viz = d3.select('div.content').append('svg')
   .attr("width", "100%")
