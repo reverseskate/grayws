@@ -262,7 +262,7 @@ grayws_links = grayws_links.filter(function(d) { return d != undefined && !d.tar
 
 viz = d3.select('div.content').append('svg')
   .attr("width", "100%")
-  .attr("height", 700)
+  .attr("height", 900)
 
 // Horizontal Tree
 /*
