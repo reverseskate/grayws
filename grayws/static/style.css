@@ -123,20 +123,24 @@ text, title {
   font-size: 10px;
 }
 
-.CREATE_COMPLETE, .DELETE_COMPLETE, .UPDATE_COMPLETE {
-  stroke: green
+.CREATE_COMPLETE, .UPDATE_COMPLETE {
+  stroke: green;
+}
+
+.DELETE_COMPLETE {
+  stroke: black;
 }
 
 .CREATE_IN_PROGRESS, .DELETE_IN_PROGRESS, .UPDATE_IN_PROGRESS {
-  stroke: yellow
+  stroke: yellow;
 }
 
 .DELETE_SKIPPED {
-  stroke: orange
+  stroke: orange;
 }
 
 .CREATE_FAILED, .DELETE_FAILED, .UPDATE_FAILED {
-  stroke: red
+  stroke: red;
 }
 
 g text {
