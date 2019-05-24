@@ -62,6 +62,11 @@ def json_template(stack_name):
     template = aws.get_template(stack_name)
     return jsonify(template)
 
+@app.route("/stack/<stack_name>/json/status/")
+def json_status(stack_name):
+  status = aws.status_json(stack_name)
+  return jsonify(status)
+
 @app.route("/stack/<stack_name>/icons/")
 def icons(stack_name):
     template = aws.get_template(stack_name)

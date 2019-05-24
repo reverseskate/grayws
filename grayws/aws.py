@@ -198,6 +198,10 @@ def events_json(stack):
   raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
   return raw_events
 
+def status_json(stack):
+  status = cfn.describe_stacks(StackName=stack)['Stacks'][0]
+  return status
+
 def apply_change_set(stack, changeset):
     cfn.execute_change_set(StackName=stack, ChangeSetName=changeset)
     return True

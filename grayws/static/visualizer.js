@@ -46,24 +46,29 @@ var resource_states = {
   }
 }
 
-function resource_state(stack) {
-  console.log("refresh")
+// Update the resource state once
+d3.json("/stack/" + stack + "/json/resources/").then(function(resources) {
+  resources.forEach(function(d) {
+    d3.select("circle." + d.LogicalResourceId).attr("class", d.LogicalResourceId + " Resource node " + d.ResourceStatus)
+      .attr("stroke-width", node_size * settings["Resource"]["scale"] * .1)
+  })
+})
+
+var t = d3.interval(function() {
   d3.json("/stack/" + stack + "/json/resources/").then(function(resources) {
     resources.forEach(function(d) {
-      d3.select("circle." + d.LogicalResourceId).attr("class", d3.select("circle." + d.LogicalResourceId).attr("class").replace("incomplete", d.ResourceStatus))
+      d3.select("circle." + d.LogicalResourceId).attr("class", d.LogicalResourceId + " Resource node " + d.ResourceStatus)
         .attr("stroke-width", node_size * settings["Resource"]["scale"] * .1)
-//        .attr("stroke", function(d) { return resource_states[d.ResourceStatus]["color"]; })
     })
-
-/*
-    first_event = d3.max(events.filter(function(d) { return d.ResourceStatusReason == "User Initiated" && d.ResourceType == "AWS::CloudFormation::Stack" }), function(d) { return d.Timestamp; })
-    current_events = events.filter(function(d) { return d.Timestamp >= first_event && d.ResourceType != "AWS::CloudFormation::Stack"; })
-    current_events.forEach(function(d) {    
-      d3.select("circle." + d.LogicalResourceId).attr("class", d3.select("circle." + d.LogicalResourceId).attr("class").replace("incomplete", "complete")).attr("stroke-width", node_size * settings["Resource"]["scale"] * .1)
-    })
-*/
   })
-}
+  
+  d3.json("/stack/" + stack + "/json/status/").then(function(status) {
+    if (status.StackStatus.includes("COMPLETE")) { 
+      console.log('Stack Complete, stopping') 
+      t.stop();
+    }
+  });
+}, 8000)
 
 var deps = []
 
@@ -430,7 +435,7 @@ var circles = node.append("circle")
   .style("fill", function(d) { 
     return "url(#" + d.id + ")"
   })
-  .attr("class", function(d) { return d.type + " node incomplete " + d.id; })
+  .attr("class", function(d) { return d.type + " node " + d.id; })
   .attr("r", function(d) { return node_size * settings[d.type]["scale"] * .9; })
   .attr("stroke", function(d) { return settings[d.type]["color"]; })
   .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; })
@@ -472,7 +477,6 @@ function simulate() {
       .nodes(grayws_nodes.concat(grayws_links))
       .on("tick", ticked)
       .tick(8)
-      .on("end", swell)
 
   simulation.force("link")
       .links(grayws_links);
@@ -498,27 +502,23 @@ function simulate() {
   }
 }
 
-resource_state(stack)
+//resource_state(stack)
 
 simulate()
 
-function swell() {
-
+d3.interval(function() {
   // Animate In Progress
-  in_progress =  d3.selectAll(".CREATE_COMPLETE, .UPDATE_IN_PROGRESS, .DELETE_IN_PROGRESS") 
+  in_progress =  d3.selectAll(".CREATE_IN_PROGRESS, .UPDATE_IN_PROGRESS, .DELETE_IN_PROGRESS") 
 
   in_progress
     .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; }) 
     .transition()
-    .duration(2000)   
+    .duration(1500)
     .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .3; }) 
     .transition()
-    .duration(2000)
+    .duration(1500)
     .attr("stroke-width", function(d) { return node_size * settings[d.type]["scale"] * .1; })
-    .transition()
-    .duration(2000);
-//    .on("end", swell());
-  }
+  }, 3000)
 
 function showtext() {
   d3.select(this).attr("class", d3.select(this).attr("class") + " showtext")
@@ -527,8 +527,5 @@ function showtext() {
 function hidetext() {
   d3.select(this).attr("class", d3.select(this).attr("class").replace(" showtext", ""))
 }
-
-//swell()
-//swell()
 
  
