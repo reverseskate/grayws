@@ -7,5 +7,5 @@ d3.select(".content")
   .append("a")
   .attr("href", function(d) { return d['link']; })
   .attr("class", "stack-link")
-  .text(function(d) { return d['name']; })
+  .text(function(d,i) { return d['name']; })
 ;
