@@ -1,5 +1,3 @@
-console.log(json)
-
 table = d3.select('div.content')
   .append('table')
   
@@ -15,5 +13,3 @@ rows.append("td")
   .append("img")
   .attr("src", function(d) { return "/static/icons/" + d.Type.replace(/::/g, "_") + ".svg"; })
   .attr("height", "40px")
-
-console.log(json.Resources)
