@@ -59,7 +59,6 @@ def parse_event(event):
     return event_string
 
 def construct_diff(args):
-    print(args)
     if isinstance(args[1], str):
         node_keys = args[1].split(".")
     else:
@@ -142,6 +141,10 @@ def get_template(stack, change_set=None):
         template = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
     else:
         template = cfn.get_template(StackName=stack)['TemplateBody']
+
+    if isinstance(template, str):
+      template = json.loads(to_json(template))
+
     return template
 
 def change_set_info(stack, changeset):
@@ -150,12 +153,10 @@ def change_set_info(stack, changeset):
     change_set_template_body = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
     if isinstance(original_template_body, str):
         original_template = json.loads(to_json(original_template_body))
-        print("Original Template is YAML")
     else:
         original_template = dict(original_template_body)
     if isinstance(change_set_template_body, str):
         change_set_template = json.loads(to_json(change_set_template_body))
-        print("New Template is YAML")
     else:
         change_set_template = dict(change_set_template_body)
 
@@ -185,10 +186,21 @@ def stack_events(stack, scope):
     raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
     if scope:
         events = list(map(lambda x: parse_event(x), raw_events))
-        print("Filtering events")
     else:
         events = list(map(lambda x: parse_event(x), raw_events))
     return events
+
+def resources_json(stack):
+  resources = cfn.list_stack_resources(StackName=stack)['StackResourceSummaries']
+  return resources
+
+def events_json(stack):
+  raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
+  return raw_events
+
+def status_json(stack):
+  status = cfn.describe_stacks(StackName=stack)['Stacks'][0]
+  return status
 
 def apply_change_set(stack, changeset):
     cfn.execute_change_set(StackName=stack, ChangeSetName=changeset)

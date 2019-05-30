@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}{{ stack }} stack graph{% endblock %}
+{% block content %}
+<div class="content"></div>
+<script>
+  var stack = "{{ stack }}"
+</script>
+<script src="{{ url_for('static', filename='visualizer.js') }}"></script>
+<script src="https://d3js.org/d3-force.v1.min.js"></script>
+{% endblock %}

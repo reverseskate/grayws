@@ -117,7 +117,39 @@ tr.differences td pre {
   color: red;
 }
 
-g.links {
-  stroke-width: 5;
-  color: blue;
+text, title {
+  fill: black; 
+  font-family: sans-serif;
+  font-size: 10px;
 }
+
+.CREATE_COMPLETE, .UPDATE_COMPLETE {
+  stroke: green;
+}
+
+.DELETE_COMPLETE {
+  stroke: black;
+}
+
+.CREATE_IN_PROGRESS, .DELETE_IN_PROGRESS, .UPDATE_IN_PROGRESS {
+  stroke: yellow;
+}
+
+.DELETE_SKIPPED {
+  stroke: orange;
+}
+
+.CREATE_FAILED, .DELETE_FAILED, .UPDATE_FAILED {
+  stroke: red;
+}
+
+g text {
+  display: none;
+}
+
+g.showtext text {
+  display: inline;
+  fill: blue;
+  text-anchor: middle;
+}
+

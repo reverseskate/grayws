@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, jsonify
 
 from grayws import app, aws
 
@@ -21,10 +21,10 @@ def stack(stack_name):
     stack_info = aws.stack_info(stack_name)
     return render_template('stack.html', stack = stack_info, data = stack_info)
 
-@app.route("/stack/<stack_name>/template/")
-def template(stack_name):
+@app.route("/stack/<stack_name>/graph/")
+def graph(stack_name):
     template = aws.get_template(stack_name)
-    return render_template('template.html', stack = stack_name, data = template)
+    return render_template('graph.html', stack = stack_name, data = template)
 
 @app.route("/stack/<stack_name>/set/<changeset>/")
 def changeset(stack_name, changeset):
@@ -46,3 +46,28 @@ def events(stack_name):
     scope = None
     events = aws.stack_events(stack_name, None)
     return render_template('events.html', stack = stack_name, scope = scope, data = events)
+
+@app.route("/stack/<stack_name>/json/events/")
+def json_events(stack_name):
+    events = aws.events_json(stack_name)
+    return jsonify(events)
+
+@app.route("/stack/<stack_name>/json/resources/")
+def json_resources(stack_name):
+    resources = aws.resources_json(stack_name)
+    return jsonify(resources)
+
+@app.route("/stack/<stack_name>/json/template/")
+def json_template(stack_name):
+    template = aws.get_template(stack_name)
+    return jsonify(template)
+
+@app.route("/stack/<stack_name>/json/status/")
+def json_status(stack_name):
+  status = aws.status_json(stack_name)
+  return jsonify(status)
+
+@app.route("/stack/<stack_name>/icons/")
+def icons(stack_name):
+    template = aws.get_template(stack_name)
+    return render_template('icons.html', stack = stack_name, data = template)

@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Icons for: {{ stack }}</h2>
+<div class="content"></div>
+<script src="{{ url_for('static', filename='icons.js') }}"></script>
+<!--script src="https://d3js.org/d3-force.v1.min.js"></script-->
+{% endblock %}
