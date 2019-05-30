@@ -27,11 +27,10 @@ parameters = json['processed']['parameters']
 table = d3.select(".content").append("table").attr("class", "changes");
 headers = table.append("th").attr("class", "headers")
 
-headers.append("td").attr("width", 50).attr("class", "header").attr("class", "action").text("Action");
-headers.append("td").attr("width", 460).attr("class", "header").attr("class", "type").text("Type");
-headers.append("td").attr("width", 483).attr("class", "header").attr("class", "resource").text("Resource");
-//headers.append("td").attr("width", 450).text("Changes");
-headers.append("td").attr("width", 100).attr("class", "replacement").text("Replacement");
+headers.append("td").attr("class", "header").attr("class", "action").text("Action");
+headers.append("td").attr("class", "header").attr("class", "type").text("Type");
+headers.append("td").attr("class", "header").attr("class", "resource").text("Resource");
+headers.append("td").attr("class", "replacement").text("Replacement");
 
 // Sort by Modified first, then Add and Remove
 rows = table.selectAll("tr")
@@ -46,15 +45,15 @@ rows = table.selectAll("tr")
 rows.append("td").attr("colspan", 4).attr("class", "container").append("table").attr("class", "change-set");
 // Append the change set description row
 rows.select("table").append("tr").attr("class", "change-set");
-rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.Action; }).attr("width", 52).attr("class", "action");
-rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.ResourceType; } ).attr("width", 452).attr("class", "type");
-rows.select("table").select("tr.change-set").append("td").attr("class", "logical-id").text(function(d) { return d.LogicalResourceId; } ).attr("width", 477).attr("class", "resource");
-rows.select("table").select("tr.change-set").append("td").attr("width", 100).attr("class", "replacement").text(function(d) { return d.Replacement; });
+rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.Action; }).attr("class", "action");
+rows.select("table").select("tr.change-set").append("td").text(function(d) { return d.ResourceType; } ).attr("class", "type");
+rows.select("table").select("tr.change-set").append("td").attr("class", "logical-id").text(function(d) { return d.LogicalResourceId; } ).attr("class", "resource");
+rows.select("table").select("tr.change-set").append("td").attr("class", "replacement").text(function(d) { return d.Replacement; });
 
 // Append the change set reasons row
 rows.select("table").filter(function(d) { return d.Action == 'Modify'; }).append("tr").attr("class", "reasons");
 rows.select("table").select("tr.reasons").append("td");
-rows.select("table").select("tr.reasons").append("td").attr("class", "details").attr("colspan", 2).attr("width", 906);
+rows.select("table").select("tr.reasons").append("td").attr("class", "details").attr("colspan", 2);
 // Append the change set compare row
 rows.select("table").append("tr").attr("class", "compare");
 rows.select("table").select("tr.compare").append("td").text("Compare");
