@@ -7,4 +7,4 @@ COPY ./grayws ./grayws
 RUN pip3 install -r requirements.txt
 ENV FLASK_APP=grayws
 
-CMD python3 -m flask run
+CMD python3 -m flask run --host=0.0.0.0
