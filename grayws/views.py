@@ -1,10 +1,10 @@
-from flask import Flask, render_template, url_for, jsonify
+from flask import Flask, redirect, render_template, url_for, jsonify
 
 from grayws import app, aws
 
 @app.route("/")
 def welcome():
-    return "Gray Weather Station"
+    return redirect("/stacks/")
 
 @app.route("/about/")
 def about():
