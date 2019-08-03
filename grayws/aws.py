@@ -109,6 +109,9 @@ def stack_list():
     stacks = cfn.list_stacks(StackStatusFilter=['CREATE_IN_PROGRESS', 'CREATE_COMPLETE','CREATE_FAILED', 'CREATE_COMPLETE', 'ROLLBACK_IN_PROGRESS', 'ROLLBACK_FAILED', 'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED', 'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS', 'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_COMPLETE', 'REVIEW_IN_PROGRESS'])
     names = list(map(lambda x: {
       'name': x['StackName'],
+      'description': x['TemplateDescription'],
+      'created': x['CreationTime'],
+      'updated': x['LastUpdatedTime'],
       'status': x['StackStatus'],
       'drift': x['DriftInformation']['StackDriftStatus'],
       } , stacks['StackSummaries']))
