@@ -1,0 +1,19 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "cloudformation:DescribeChangeSet",
+                "cloudformation:DescribeStacks",
+                "cloudformation:DescribeStackResourceDrifts",
+                "cloudformation:GetTemplate",
+                "cloudformation:ListChangeSets",
+                "cloudformation:ListStacks",
+                "cloudformation:ListStackResources"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
