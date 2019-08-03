@@ -13,6 +13,38 @@ h1, h2 {
   font-family: 'Nixie One', cursive;
 }
 
+table.stack-list th {
+  text-align: left;
+}
+
+table.stack-list td, table.stack-list th {
+  padding-right: 15px;
+}
+
+table.stack-list td.name {
+  text-align: left;
+/*   width: 15%; */
+}
+
+table.stack-list td.drift {
+  text-align: left;
+}
+
+table.stack-list td.status {
+  text-align: left;
+/*   width: 20%; */
+}
+
+table.stack-list td.created, table.stack-list td.update {
+  text-align: left;
+/*   width: 30%   */
+}
+
+table.stack-list td.drift {
+  text-align: center;
+/*   width: 10% */
+}
+
 th.headers td {
   font-weight: 100;
   text-align: left;

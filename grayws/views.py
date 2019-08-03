@@ -13,8 +13,8 @@ def about():
 @app.route("/stacks/")
 def stacks():
     stack_list = aws.stack_list()
-    stacks = list(map(lambda x: { 'name': x, 'link': url_for('stack', stack_name = x) }, stack_list))
-    return render_template('stacks.html', stacks = stacks, data = stacks)
+    stacks = list(map(lambda x: { 'name': x['name'], 'link': url_for('stack', stack_name = x['name']), 'status': x['status'], 'drift': x['drift'], 'created': x['created'], 'updated': x['updated'] }, stack_list))
+    return render_template('stacks.html', data = stacks)
 
 @app.route("/stack/<stack_name>/")
 def stack(stack_name):
