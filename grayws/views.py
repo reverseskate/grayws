@@ -6,6 +6,10 @@ from grayws import app, aws
 def welcome():
     return redirect("/stacks/")
 
+@app.route("/_status/")
+def status():
+    return jsonify({ 'STATUS': 'OK' })
+
 @app.route("/about/")
 def about():
     return "GrayWS: A Cloudformation Orchestration Dashboard"
