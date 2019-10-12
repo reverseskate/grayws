@@ -7,4 +7,4 @@ COPY ./grayws ./grayws
 RUN pip3 install -r requirements.txt
 ENV FLASK_APP=grayws
 
-CMD python3 -m flask run --host=0.0.0.0
+CMD gunicorn -w 4 grayws:app --bind=0.0.0.0
