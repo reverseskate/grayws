@@ -3,5 +3,6 @@ cfn_flip
 deepmerge
 dictdiffer
 flask
+gunicorn
 jsondiff
 pyyaml
