@@ -122,17 +122,35 @@ def stack_info(stack):
     changesets = cfn.list_change_sets(StackName=stack)
     drift = cfn.describe_stack_resource_drifts(StackName=stack, StackResourceDriftStatusFilters= ['MODIFIED','DELETED'])
 
+    params = sorted(stack_details['Stacks'][0]['Parameters'], key = lambda x: x['ParameterKey'])
+    outputs = sorted(stack_details['Stacks'][0]['Outputs'], key = lambda x: x['OutputKey'])
+    tags = sorted(stack_details['Stacks'][0]['Tags'], key = lambda x: x['Key'])
+    
+    stack_info = []
+    
+    max_length = max(len(params), len(outputs), len(tags))
+    for x in range(0, max_length):
+      items = {}
+      if len(params) > x:
+        items.update(params[x])
+      if len(outputs) > x:
+        items.update(outputs[x])
+      if len(tags) > x:
+        items.update(tags[x])
+      stack_info.append(items)
+    
+
     if len(changesets['Summaries']) > 0:
         stack_change_sets = list(map(lambda x: {
-            'name': x['ChangeSetName'],
-            'id': x['ChangeSetId'],
-            'status': x['Status'],
-            'exec_status': x['ExecutionStatus'],
-            'created': x['CreationTime']
+          'name': x['ChangeSetName'],
+          'id': x['ChangeSetId'],
+          'status': x['Status'],
+          'exec_status': x['ExecutionStatus'],
+          'created': x['CreationTime']
         }, changesets['Summaries']))
     else:
-        stack_change_sets = []
-    details = list(map(lambda x: {
+      stack_change_sets = []
+      details = list(map(lambda x: {
         'name': stack,
         'change_sets': stack_change_sets,
         'drifts': drift['StackResourceDrifts'],
@@ -140,8 +158,9 @@ def stack_info(stack):
         #'description': x['Description'],
         'created': x['CreationTime'],
         #'last_updated': x['LastUpdatedTime'],
-        'status': x['StackStatus']
-        }, stack_details['Stacks']))
+        'status': x['StackStatus'],
+        'info': stack_info
+      }, stack_details['Stacks']))
     return details[0]
 
 def get_template(stack, change_set=None):
