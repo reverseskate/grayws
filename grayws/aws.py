@@ -150,7 +150,7 @@ def stack_info(stack):
         }, changesets['Summaries']))
     else:
       stack_change_sets = []
-      details = list(map(lambda x: {
+    details = list(map(lambda x: {
         'name': stack,
         'change_sets': stack_change_sets,
         'drifts': drift['StackResourceDrifts'],
