@@ -13,6 +13,10 @@ h1, h2 {
   font-family: 'Nixie One', cursive;
 }
 
+table {
+  -webkit-border-horizontal-spacing: 0px;
+}
+
 table.stack-list th {
   text-align: left;
 }
@@ -46,7 +50,6 @@ table.stack-list td.drift {
 }
 
 th.headers td {
-  font-weight: 100;
   text-align: left;
   padding: 0;
   border: 0;

@@ -122,12 +122,21 @@ def stack_info(stack):
     changesets = cfn.list_change_sets(StackName=stack)
     drift = cfn.describe_stack_resource_drifts(StackName=stack, StackResourceDriftStatusFilters= ['MODIFIED','DELETED'])
 
-    params = sorted(stack_details['Stacks'][0]['Parameters'], key = lambda x: x['ParameterKey'])
-    outputs = sorted(stack_details['Stacks'][0]['Outputs'], key = lambda x: x['OutputKey'])
-    tags = sorted(stack_details['Stacks'][0]['Tags'], key = lambda x: x['Key'])
-    
+    print('Parameters' in stack_details['Stacks'][0])
+    if 'Parameters' in stack_details['Stacks'][0]:
+      params = sorted(stack_details['Stacks'][0]['Parameters'], key = lambda x: x['ParameterKey'])
+    else:
+      params = []
+    if 'Outputs' in stack_details['Stacks'][0]:
+      outputs = sorted(stack_details['Stacks'][0]['Outputs'], key = lambda x: x['OutputKey'])
+    else:
+      outputs = []
+    if 'Tags' in stack_details['Stacks'][0]:
+      tags = sorted(stack_details['Stacks'][0]['Tags'], key = lambda x: x['Key'])
+    else:
+      tags = []
     stack_info = []
-    
+
     max_length = max(len(params), len(outputs), len(tags))
     for x in range(0, max_length):
       items = {}
@@ -138,7 +147,6 @@ def stack_info(stack):
       if len(tags) > x:
         items.update(tags[x])
       stack_info.append(items)
-    
 
     if len(changesets['Summaries']) > 0:
         stack_change_sets = list(map(lambda x: {

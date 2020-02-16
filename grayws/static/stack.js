@@ -23,24 +23,47 @@ rows.append("td").attr("class", row_class).append("table").attr("class", table_c
 rows.select("table").append("tr").attr("class", table_class);
 }
 
-var info_table = d3.select(".info").append("table").attr("width", "100%");
-var info_headers = info_table.append("tr").attr("class", "headers");
-info_headers.append("td").attr("width", "33%").attr("colspan", 2).text("Parameters")
-info_headers.append("td").attr("width", "33%").attr("colspan", 2).text("Outputs")
-info_headers.append("td").attr("width", "33%").attr("colspan", 2).text("Tags")
+var parameters = json['info'].filter(function(d) { return d.ParameterKey != null })
+var outputs = json['info'].filter(function(d) { return d.OutputKey != null })
+var tags = json['info'].filter(function(d) { return d.Key != null })
 
-var info_rows = info_table.selectAll("tr.info")
-  .data(json['info'])
+var info_table = d3.select(".info").append("table").attr("width", "100%");
+var parameter_headers = info_table.append("th").attr("class", "headers parameters");
+parameter_headers.append("td").attr("colspan", 2).text("Parameters")
+
+var parameter_rows = info_table.selectAll("tr.parameters")
+  .data(parameters)
   .enter()
   .append("tr")
-  .attr("class", "info");
+  .attr("class", "info parameters");
 
-info_rows.append("td").text(function(d) { return d.ParameterKey })
-info_rows.append("td").text(function(d) { return d.ParameterValue })
-info_rows.append("td").text(function(d) { return d.OutputKey })
-info_rows.append("td").text(function(d) { return d.OutputValue })
-info_rows.append("td").text(function(d) { return d.Key })
-info_rows.append("td").text(function(d) { return d.Value }) 
+parameter_rows.append("td").attr("class", "key").text(function(d) { return d.ParameterKey })
+parameter_rows.append("td").attr("class", "value").text(function(d) { return d.ParameterValue })
+
+var output_headers = info_table.append("th").attr("class", "headers outputs");
+output_headers.append("td").attr("colspan", 2).text("Outputs")
+
+var output_rows = info_table.selectAll("tr.outputs")
+  .data(outputs)
+  .enter()
+  .append("tr")
+  .attr("class", "info outputs");
+
+output_rows.append("td").attr("class", "key").text(function(d) { return d.OutputKey })
+output_rows.append("td").attr("class", "value").text(function(d) { return d.OutputValue })
+
+var tag_headers = info_table.append("th").attr("class", "headers tags");
+tag_headers.append("td").attr("colspan", 2).text("Tags")
+
+var tag_rows = info_table.selectAll("tr.tags")
+  .data(tags)
+  .enter()
+  .append("tr")
+  .attr("class", "info tags");
+  
+tag_rows.append("td").attr("class", "key").text(function(d) { return d.Key })
+tag_rows.append("td").attr("class", "value").text(function(d) { return d.Value })
+
 
 var set_table = d3.select(".change_sets").append("table");
 var set_headers = set_table.append("tr").attr("class", "headers")
