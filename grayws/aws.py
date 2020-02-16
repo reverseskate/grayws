@@ -106,16 +106,28 @@ def resource_diffs(orig, new):
 ## AWS API Function
 def stack_list():
     # Return all stacks except DELETE_COMPLETE
-    stacks = cfn.list_stacks(StackStatusFilter=['CREATE_IN_PROGRESS', 'CREATE_COMPLETE','CREATE_FAILED', 'CREATE_COMPLETE', 'ROLLBACK_IN_PROGRESS', 'ROLLBACK_FAILED', 'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED', 'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS', 'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_COMPLETE', 'REVIEW_IN_PROGRESS'])
-    names = list(map(lambda x: {
+    stacks = []
+    stack_list = cfn.list_stacks(StackStatusFilter=['CREATE_IN_PROGRESS', 'CREATE_COMPLETE','CREATE_FAILED', 'CREATE_COMPLETE', 'ROLLBACK_IN_PROGRESS', 'ROLLBACK_FAILED', 'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED', 'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS', 'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_COMPLETE', 'REVIEW_IN_PROGRESS'])
+    stacks.extend(list(map(lambda x: {
       'name': x.get('StackName'),
       'description': x.get('TemplateDescription'),
       'created': x.get('CreationTime'),
       'updated': x.get('LastUpdatedTime'),
       'status': x.get('StackStatus'),
       'drift': x['DriftInformation']['StackDriftStatus'],
-      } , stacks['StackSummaries']))
-    return names
+      }, stack_list['StackSummaries'])))
+    while 'NextToken' in stack_list:
+      token = stack_list['NextToken']
+      stack_list = cfn.list_stacks(StackStatusFilter=['CREATE_IN_PROGRESS', 'CREATE_COMPLETE','CREATE_FAILED', 'CREATE_COMPLETE', 'ROLLBACK_IN_PROGRESS', 'ROLLBACK_FAILED', 'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED', 'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS', 'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_COMPLETE', 'REVIEW_IN_PROGRESS'], NextToken=token)
+      stacks.extend(list(map(lambda x: {
+      'name': x.get('StackName'),
+      'description': x.get('TemplateDescription'),
+      'created': x.get('CreationTime'),
+      'updated': x.get('LastUpdatedTime'),
+      'status': x.get('StackStatus'),
+      'drift': x['DriftInformation']['StackDriftStatus'],
+      }, stack_list['StackSummaries'])))
+    return stacks
 
 def stack_info(stack):
     stack_details = cfn.describe_stacks(StackName=stack)
