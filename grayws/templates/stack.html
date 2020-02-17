@@ -3,10 +3,10 @@
 {% block content %}
 <h3>{{ stack['description'] }}</h3>
 <p>Status: {{ stack['status'] }}</p>
-<div class="info"></div>
 <h4>Change Sets:</h4>
 <div class="change_sets"></div>
 <h4>Resource Drift:</h4>
 <div class="drift"></div>
+<div class="info"></div>
 <script src="{{ url_for('static', filename='stack.js') }}"></script>
 {% endblock %}
