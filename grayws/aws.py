@@ -8,6 +8,9 @@ import yaml
 
 cfn = boto3.client('cloudformation')
 
+def default_region():
+  return cfn._client_config.region_name
+
 diff_merger = Merger(
     [
         (list, ["append"]),
@@ -104,7 +107,9 @@ def resource_diffs(orig, new):
     return diffs
 
 ## AWS API Function
-def stack_list():
+def stack_list(region=None):
+    cfn = boto3.client('cloudformation', region_name=region)
+
     # Return all stacks except DELETE_COMPLETE
     stacks = []
     stack_list = cfn.list_stacks(StackStatusFilter=['CREATE_IN_PROGRESS', 'CREATE_COMPLETE','CREATE_FAILED', 'CREATE_COMPLETE', 'ROLLBACK_IN_PROGRESS', 'ROLLBACK_FAILED', 'ROLLBACK_COMPLETE', 'DELETE_IN_PROGRESS', 'DELETE_FAILED', 'UPDATE_IN_PROGRESS', 'UPDATE_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_COMPLETE', 'UPDATE_ROLLBACK_IN_PROGRESS', 'UPDATE_ROLLBACK_FAILED', 'UPDATE_ROLLBACK_COMPLETE_CLEANUP_IN_PROGRESS', 'UPDATE_ROLLBACK_COMPLETE', 'REVIEW_IN_PROGRESS'])
@@ -129,7 +134,9 @@ def stack_list():
       }, stack_list['StackSummaries'])))
     return stacks
 
-def stack_info(stack):
+def stack_info(stack, region=None):
+    cfn = boto3.client('cloudformation', region_name=region)
+
     stack_details = cfn.describe_stacks(StackName=stack)
     changesets = cfn.list_change_sets(StackName=stack)
     drift = cfn.describe_stack_resource_drifts(StackName=stack, StackResourceDriftStatusFilters= ['MODIFIED','DELETED'])
@@ -183,9 +190,11 @@ def stack_info(stack):
       }, stack_details['Stacks']))
     return details[0]
 
-def get_template(stack, change_set=None):
+def get_template(stack, region, change_set=None):
+    cfn = boto3.client('cloudformation', region_name=region)
+
     if change_set:
-        template = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
+        template = cfn.get_template(StackName=stack, ChangeSetName=changeset)['TemplateBody']
     else:
         template = cfn.get_template(StackName=stack)['TemplateBody']
 
@@ -194,7 +203,9 @@ def get_template(stack, change_set=None):
 
     return template
 
-def change_set_info(stack, changeset):
+def change_set_info(stack, region, changeset):
+    cfn = boto3.client('cloudformation', region_name=region)
+
     change_set = cfn.describe_change_set(StackName=stack, ChangeSetName=changeset)
     original_template_body = cfn.get_template(StackName=stack)['TemplateBody']
     change_set_template_body = cfn.get_template(StackName=stack,  ChangeSetName=changeset)['TemplateBody']
@@ -229,7 +240,9 @@ def change_set_info(stack, changeset):
     set_info = { 'raw': change_set, 'processed': set_details, 'orig': orig_resources, 'new': new_resources, 'diffs': diffs }
     return set_info
 
-def stack_events(stack, scope):
+def stack_events(stack, region, scope):
+    cfn = boto3.client('cloudformation', region_name=region)
+
     raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
     if scope:
         events = list(map(lambda x: parse_event(x), raw_events))
@@ -237,22 +250,27 @@ def stack_events(stack, scope):
         events = list(map(lambda x: parse_event(x), raw_events))
     return events
 
-def resources_json(stack):
+def resources_json(stack, region):
+  cfn = boto3.client('cloudformation', region_name=region)
   resources = cfn.list_stack_resources(StackName=stack)['StackResourceSummaries']
   return resources
 
-def events_json(stack):
+def events_json(stack, region):
+  cfn = boto3.client('cloudformation', region_name=region)
   raw_events = cfn.describe_stack_events(StackName=stack)['StackEvents']
   return raw_events
 
-def status_json(stack):
+def status_json(stack, region):
+  cfn = boto3.client('cloudformation', region_name=region)
   status = cfn.describe_stacks(StackName=stack)['Stacks'][0]
   return status
 
-def apply_change_set(stack, changeset):
+def apply_change_set(stack, region, changeset):
+    cfn = boto3.client('cloudformation', region_name=region)
     cfn.execute_change_set(StackName=stack, ChangeSetName=changeset)
     return True
 
-def delete_change_set(stack, changeset):
+def delete_change_set(stack, region, changeset):
+    cfn = boto3.client('cloudformation', region_name=region)
     cfn.delete_change_set(StackName=stack, ChangeSetName=changeset)
     return True
