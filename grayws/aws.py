@@ -206,8 +206,10 @@ def change_set_info(stack, changeset):
         change_set_template = json.loads(to_json(change_set_template_body))
     else:
         change_set_template = dict(change_set_template_body)
-
-    orig_resources = original_template['Resources']
+    if original_template:
+      orig_resources = original_template['Resources']
+    else:
+      orig_resources = {}
     new_resources = change_set_template['Resources']
 
     diffs = resource_diffs(orig_resources, new_resources)
